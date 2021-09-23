@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Богдан Коломиец](https://up.htmlacademy.ru/javascript/24/user/1190941).
-* Наставник: [Александр Карцев](https://up.htmlacademy.ru/profession/backender/1/javascript/user/663289).
+* Наставник: [Александр Карцев](https://htmlacademy.ru/profile/id663289).
 
 ---
 
