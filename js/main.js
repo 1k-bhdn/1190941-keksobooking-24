@@ -1,43 +1,33 @@
 /**
- * @param min {number}
- * @param max {number}
- * @return {undefined}
- */
-const validateValues = (min, max) => {
-  if (min < 0 || max < 0) {
-    throw new Error('Аргументы не могут быть меньше 0');
-  } else if (min > max || min === max) {
-    throw new Error('Аргумент max не может быть меньше min или равен ему');
-  }
-};
-
-/**
- * @author https://learn.javascript.ru/task/random-int-min-max
+ * @author https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
  * @param min {number}
  * @param max {number}
  * @return {number} Случайное целое число
  */
 const getRandomInt = (min, max) => {
-  validateValues(min, max);
-  return Math.round(min - 0.5 + Math.random() * (max - min + 1));
+  const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
+  const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
+
+  return Math.floor(Math.random() * (upper - lower + 1) + lower);
 };
 
 /**
+ * @author https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
  * @param min {number}
  * @param max {number}
  * @param digits {number} Количество знаков после запятой
- * @return {number} Случайное число с плавающей точкой
+ * @return {string} Строка со случайным числом с плавающей точкой
  */
 const getRandomFloat = (min, max, digits) => {
-  validateValues(min, max);
-  return parseFloat((min + Math.random() * (max - min)).toFixed(digits));
+  const lower = Math.min(Math.abs(min), Math.abs(max));
+  const upper = Math.max(Math.abs(min), Math.abs(max));
+
+  return (Math.random() * (upper - lower) + lower).toFixed(digits);
 };
 
-getRandomFloat(1.1, 1.7, 2);
-
 /**
- * @param arr {array}
- * @return {array}
+ * @param arr {array} Исходный массив
+ * @return {array} Массив случайной длинны
  */
 const getArrRandomLength = (arr) => arr.slice(0, getRandomInt(1, arr.length));
 
