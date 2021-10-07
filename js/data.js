@@ -51,8 +51,8 @@ const generateAdData = (i) => {
       photos: getArrRandomLength(PHOTOS),
     },
     location: {
-      lat: lat,
-      lng: lng,
+      lat,
+      lng,
     },
   };
 };
