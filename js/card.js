@@ -9,7 +9,8 @@ export const createAd = (data, template) => {
     .textContent = `${data.offer.rooms ? data.offer.rooms : 'Не ясно сколько'} комнат для
     ${data.offer.guests ? data.offer.guests : 'не понятно скольки'} гостей`;
   offer.querySelector('.popup__text--time')
-    .textContent = `Заезд после ${data.offer.checkin ? data.offer.checkin : 'скольки хотите'}, выезд до
+    .textContent = `Заезд после
+    ${data.offer.checkin ? data.offer.checkin : 'скольки хотите'}, выезд до
     ${data.offer.checkout ? data.offer.checkin :'скольки понадобится'}`;
 
   if (data.offer.features) {
