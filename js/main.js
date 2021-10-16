@@ -1,8 +1,14 @@
 import {generateAdData} from './data.js';
+import {createAd} from './card.js';
 
 const ADS_COUNT = 10;
 const data = [];
+const mapCanvas = document.querySelector('.map__canvas');
+const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
 
-for (let i = 1; i <= ADS_COUNT; i++) {
-  data.push(generateAdData(i));
+for (let i = 0; i < ADS_COUNT; i++) {
+  data.push(generateAdData(i + 1));
+  const offer = createAd(data[i], offerTemplate);
+
+  mapCanvas.appendChild(offer);
 }
