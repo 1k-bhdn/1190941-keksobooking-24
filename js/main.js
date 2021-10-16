@@ -16,10 +16,13 @@ document.querySelector('.promo').addEventListener('click', () => {
   activateForm(adForm);
   activateForm(mapFilters);
 });
+const documentFragment = document.createDocumentFragment();
 
 for (let i = 0; i < ADS_COUNT; i++) {
   data.push(generateAdData(i + 1));
 
   const offer = createAd(data[i], offerTemplate);
-  mapCanvas.appendChild(offer);
+
+  documentFragment.appendChild(offer);
+  mapCanvas.appendChild(documentFragment);
 }

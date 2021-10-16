@@ -29,8 +29,7 @@ export const createAd = (data, template) => {
     offer.replaceChild(featuresInfo, offer.querySelector('.popup__features'));
   }
 
-  offer
-    .querySelector('.popup__description')
+  offer.querySelector('.popup__description')
     .textContent = data.offer.description ? data.offer.description : 'Тепло, светло и мухи не кусают';
 
   const img = offer.querySelector('.popup__photo');
