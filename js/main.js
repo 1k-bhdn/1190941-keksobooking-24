@@ -6,6 +6,7 @@ const ADS_COUNT = 10;
 const data = [];
 const mapCanvas = document.querySelector('.map__canvas');
 const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
+const documentFragment = document.createDocumentFragment();
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 
@@ -16,13 +17,11 @@ document.querySelector('.promo').addEventListener('click', () => {
   activateForm(adForm);
   activateForm(mapFilters);
 });
-const documentFragment = document.createDocumentFragment();
 
 for (let i = 0; i < ADS_COUNT; i++) {
   data.push(generateAdData(i + 1));
 
   const offer = createAd(data[i], offerTemplate);
-
   documentFragment.appendChild(offer);
   mapCanvas.appendChild(documentFragment);
 }
