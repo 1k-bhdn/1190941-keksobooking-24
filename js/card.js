@@ -1,4 +1,12 @@
-export const createAd = (data, template) => {
+import {generateAdData} from './data.js';
+
+const ADS_COUNT = 10;
+const dataArr = [];
+const mapCanvas = document.querySelector('.map__canvas');
+const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
+const documentFragment = document.createDocumentFragment();
+
+const createAd = (data, template) => {
   const offer = template.cloneNode(true);
   offer.querySelector('.popup__avatar').src = data.author.avatar ? data.author.avatar : 'img/avatars/default.png';
   offer.querySelector('.popup__title').textContent = data.offer.title ? data.offer.title : 'Сюда бы заголовок';
@@ -50,3 +58,11 @@ export const createAd = (data, template) => {
 
   return offer;
 };
+
+for (let i = 0; i < ADS_COUNT; i++) {
+  dataArr.push(generateAdData(i + 1));
+
+  const offer = createAd(dataArr[i], offerTemplate);
+  documentFragment.appendChild(offer);
+  mapCanvas.appendChild(documentFragment);
+}
