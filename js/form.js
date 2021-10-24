@@ -1,12 +1,21 @@
+import {changeAttributes, setFieldDependence} from './util.js';
+
+const BUNGALOW_MIN_COST = 0;
+const FLAT_MIN_COST = 1000;
+const HOTEL_MIN_COST = 3000;
+const HOUSE_MIN_COST = 5000;
+const PALACE_MIN_COST = 10000;
+
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 const adFormTitle = adForm.querySelector('#title');
 const adFormTitleMinLength = adFormTitle.getAttribute('minlength');
 const adFormPrice = adForm.querySelector('#price');
-const adFormPriceMin = adFormPrice.getAttribute('min');
-const adFormPriceMax = adFormPrice.getAttribute('max');
 const adFormRoomNumber = adForm.querySelector('#room_number');
 const adFormCapacity = adForm.querySelector('#capacity');
+const adFormType = adForm.querySelector('#type');
+const adFormTimeIn = adForm.querySelector('#timein');
+const adFormTimeOut = adForm.querySelector('#timeout');
 
 /**
  * @param form {Element} Форма из DOM
@@ -59,8 +68,17 @@ adFormTitle.addEventListener('input', () => {
 });
 
 adFormPrice.addEventListener('blur', () => {
-  if (adFormPrice.validity.rangeOverflow || adFormPrice.validity.rangeUnderflow) {
-    adFormPrice.setCustomValidity(`Цена может быть в диапазоне от ${adFormPriceMin} до ${adFormPriceMax} руб.`);
+  const roomCost = adFormPrice.value;
+  const roomType = adFormType.value;
+
+  if (roomType === 'flat' && roomCost < FLAT_MIN_COST) {
+    adFormPrice.setCustomValidity(`Минимальная цена для размещения в квартире на 1-ну ночь ${FLAT_MIN_COST} руб.`);
+  } else if (roomType === 'hotel' && roomCost < HOTEL_MIN_COST) {
+    adFormPrice.setCustomValidity(`Минимальная цена для размещения в отеле на 1-ну ночь ${HOTEL_MIN_COST} руб.`);
+  } else if (roomType === 'house' && roomCost < HOUSE_MIN_COST) {
+    adFormPrice.setCustomValidity(`Минимальная цена для размещения в доме на 1-ну ночь ${HOUSE_MIN_COST} руб.`);
+  } else if (roomType === 'palace' && roomCost < PALACE_MIN_COST) {
+    adFormPrice.setCustomValidity(`Минимальная цена для размещения в дворце на 1-ну ночь ${PALACE_MIN_COST} руб.`);
   } else {
     adFormPrice.setCustomValidity('');
   }
@@ -93,4 +111,28 @@ adFormRoomNumber.addEventListener('change', () => {
 
 adFormCapacity.addEventListener('change', () => {
   checkRoomsToCapacity(adFormCapacity);
+});
+
+adFormType.addEventListener('change', () => {
+  const roomType = adFormType.value;
+
+  if (roomType === 'bungalow') {
+    changeAttributes(adFormPrice, String(BUNGALOW_MIN_COST), 'placeholder', 'min');
+  } else if (roomType === 'flat') {
+    changeAttributes(adFormPrice, String(FLAT_MIN_COST), 'placeholder', 'min');
+  } else if (roomType === 'hotel') {
+    changeAttributes(adFormPrice, String(HOTEL_MIN_COST), 'placeholder', 'min');
+  } else if (roomType === 'house') {
+    changeAttributes(adFormPrice, String(HOUSE_MIN_COST), 'placeholder', 'min');
+  } else if (roomType === 'palace') {
+    changeAttributes(adFormPrice, String(PALACE_MIN_COST), 'placeholder', 'min');
+  }
+});
+
+adFormTimeIn.addEventListener('change', () => {
+  setFieldDependence(adFormTimeIn, adFormTimeOut);
+});
+
+adFormTimeOut.addEventListener('change', () => {
+  setFieldDependence(adFormTimeOut, adFormTimeIn);
 });

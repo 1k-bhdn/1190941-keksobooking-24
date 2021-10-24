@@ -31,4 +31,25 @@ const getRandomFloat = (min, max, digits) => {
  */
 const getArrRandomLength = (arr) => arr.slice(0, getRandomInt(1, arr.length));
 
-export {getRandomInt, getRandomFloat, getArrRandomLength};
+/**
+ * @param element {Element} Элемент чьё значение атрибутов нужно изменить
+ * @param value {string} Значение атрибутов
+ * @param attrs {string} Различное кол-во атрибутов чьё значение будет заменено
+ */
+const changeAttributes = (element, value, ...attrs) => {
+  attrs.forEach((attr) => {
+    element.setAttribute(attr, value);
+  });
+};
+
+/**
+ * @param changed Элемент значение которого изменилось
+ * @param dependent Зависимый элемент чьё значение нужно заменить
+ */
+const setFieldDependence = (changed, dependent) => {
+  if (changed.value !== dependent.value) {
+    dependent.value = changed.value;
+  }
+};
+
+export {getRandomInt, getRandomFloat, getArrRandomLength, changeAttributes, setFieldDependence};
