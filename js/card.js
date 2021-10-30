@@ -1,21 +1,21 @@
-import {generateAdData} from './data.js';
-
-const ADS_COUNT = 10;
-const dataArr = [];
-const mapCanvas = document.querySelector('.map__canvas');
-const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
-const documentFragment = document.createDocumentFragment();
-
-const createAd = (data, template) => {
+export const createAd = (data, template) => {
   const offer = template.cloneNode(true);
   offer.querySelector('.popup__avatar').src = data.author.avatar ? data.author.avatar : 'img/avatars/default.png';
   offer.querySelector('.popup__title').textContent = data.offer.title ? data.offer.title : 'Сюда бы заголовок';
   offer.querySelector('.popup__text--address').textContent = data.offer.address ? data.offer.address : 'Безвозвратно утерян';
   offer.querySelector('.popup__text--price').textContent = data.offer.price ? `${data.offer.price} ₽/ночь` : 'Три копейки';
-  offer.querySelector('.popup__type').textContent = data.offer.type ? data.offer.type : 'Халабуда';
+
+  const TYPE_OF_HOUSING_MAP = new Map;
+  TYPE_OF_HOUSING_MAP.set('palace', 'Дворец');
+  TYPE_OF_HOUSING_MAP.set('flat', 'Квартира');
+  TYPE_OF_HOUSING_MAP.set('house', 'Дом');
+  TYPE_OF_HOUSING_MAP.set('bungalow', 'Бунгало');
+  TYPE_OF_HOUSING_MAP.set('hotel', 'Отель');
+
+  offer.querySelector('.popup__type').textContent = data.offer.type ? TYPE_OF_HOUSING_MAP.get(data.offer.type) : 'Халабуда';
   offer.querySelector('.popup__text--capacity')
     .textContent = `${data.offer.rooms ? data.offer.rooms : 'Не ясно сколько'} комнат для
-    ${data.offer.guests ? data.offer.guests : 'не понятно скольки'} гостей`;
+    ${data.offer.guests ? data.offer.guests : 'не для'} гостей`;
   offer.querySelector('.popup__text--time')
     .textContent = `Заезд после
     ${data.offer.checkin ? data.offer.checkin : 'скольки хотите'}, выезд до
@@ -58,11 +58,3 @@ const createAd = (data, template) => {
 
   return offer;
 };
-
-for (let i = 0; i < ADS_COUNT; i++) {
-  dataArr.push(generateAdData(i + 1));
-
-  const offer = createAd(dataArr[i], offerTemplate);
-  documentFragment.appendChild(offer);
-  mapCanvas.appendChild(documentFragment);
-}
