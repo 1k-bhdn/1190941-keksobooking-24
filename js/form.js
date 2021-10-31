@@ -6,6 +6,7 @@ const HOTEL_MIN_COST = 3000;
 const HOUSE_MIN_COST = 5000;
 const PALACE_MIN_COST = 10000;
 
+// TODO додумать архитектуру, есть повторяющиеся объявления переменных тут и в map.js
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 const adFormTitle = adForm.querySelector('#title');
@@ -17,43 +18,22 @@ const adFormType = adForm.querySelector('#type');
 const adFormTimeIn = adForm.querySelector('#timein');
 const adFormTimeOut = adForm.querySelector('#timeout');
 
-/**
- * @param form {Element} Форма из DOM
- * @return {undefined}
- */
-const disableForm = (form) => {
-  !form.classList.contains(`${form.classList[0]}--disabled`)
-    ? form.classList.add(`${form.classList[0]}--disabled`) : null;
+(() => {
+  [adForm, mapFilters].forEach((form) => {
+    !form.classList.contains(`${form.classList[0]}--disabled`)
+      ? form.classList.add(`${form.classList[0]}--disabled`) : null;
 
-  form.querySelectorAll('fieldset, select').forEach((element) => {
-    if (!element.hasAttribute('disabled')) {
-      element.setAttribute('disabled','');
-    }
+    form.querySelectorAll('fieldset, select').forEach((element) => {
+      if (!element.hasAttribute('disabled')) {
+        element.setAttribute('disabled','');
+      }
+    });
   });
+})();
+
+const resetFormFields = () => {
+  adFormPrice.setAttribute('placeholder', '0');
 };
-
-/**
- * @param form {Element} Форма из DOM
- * @return {undefined}
- */
-const activateForm = (form) => {
-  form.classList.contains(`${form.classList[0]}--disabled`)
-    ? form.classList.remove(`${form.classList[0]}--disabled`) : null;
-
-  form.querySelectorAll('fieldset, select').forEach((element) => {
-    if (element.hasAttribute('disabled')) {
-      element.removeAttribute('disabled');
-    }
-  });
-};
-
-disableForm(adForm);
-disableForm(mapFilters);
-
-document.querySelector('.promo').addEventListener('click', () => {
-  activateForm(adForm);
-  activateForm(mapFilters);
-});
 
 adFormTitle.addEventListener('input', () => {
   const titleLength = adFormTitle.value.length;
@@ -136,3 +116,5 @@ adFormTimeIn.addEventListener('change', () => {
 adFormTimeOut.addEventListener('change', () => {
   setFieldDependence(adFormTimeOut, adFormTimeIn);
 });
+
+export {resetFormFields};

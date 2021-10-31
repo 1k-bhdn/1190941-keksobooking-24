@@ -8,13 +8,6 @@ const TYPE_OF_HOUSING = [
   'hotel',
 ];
 
-const TYPE_OF_HOUSING_MAP = new Map;
-TYPE_OF_HOUSING_MAP.set('palace', 'Дворец');
-TYPE_OF_HOUSING_MAP.set('flat', 'Квартира');
-TYPE_OF_HOUSING_MAP.set('house', 'Дом');
-TYPE_OF_HOUSING_MAP.set('bungalow', 'Бунгало');
-TYPE_OF_HOUSING_MAP.set('hotel', 'Отель');
-
 const TIME = [
   '12:00',
   '13:00',
@@ -46,11 +39,11 @@ const generateAdData = (i) => {
     },
     offer: {
       title: 'Заголовок предложения',
-      price: getRandomInt(200, 1000),
+      price: getRandomInt(500, 80000),
       address: `${lat}, ${lng}`,
-      type: TYPE_OF_HOUSING_MAP.get(TYPE_OF_HOUSING[getRandomInt(0, TYPE_OF_HOUSING.length - 1)]),
+      type: TYPE_OF_HOUSING[getRandomInt(0, TYPE_OF_HOUSING.length - 1)],
       rooms: getRandomInt(1, 4),
-      guests: getRandomInt(1, 8),
+      guests: getRandomInt(0, 8),
       checkin: TIME[getRandomInt(0, TIME.length - 1)],
       checkout: TIME[getRandomInt(0, TIME.length - 1)],
       features: getArrRandomLength(FEATURES),
