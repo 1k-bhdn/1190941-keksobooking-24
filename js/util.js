@@ -52,4 +52,20 @@ const setFieldDependence = (changed, dependent) => {
   }
 };
 
-export {getRandomInt, getRandomFloat, getArrRandomLength, changeAttributes, setFieldDependence};
+/**
+ * @param array Массив форм для активации
+ */
+const activateForms = (array) => {
+  array.forEach((form) => {
+    form.classList.contains(`${form.classList[0]}--disabled`)
+      ? form.classList.remove(`${form.classList[0]}--disabled`) : null;
+
+    form.querySelectorAll('fieldset, select').forEach((element) => {
+      if (element.hasAttribute('disabled')) {
+        element.removeAttribute('disabled');
+      }
+    });
+  });
+};
+
+export {getRandomInt, getRandomFloat, getArrRandomLength, changeAttributes, setFieldDependence, activateForms};

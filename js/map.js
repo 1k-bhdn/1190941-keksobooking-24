@@ -1,11 +1,14 @@
-import {activateForms} from './form.js';
+import {activateForms} from './util.js';
 import {generateAdData} from './data.js';
 import {createAd} from './card.js';
+import {resetFormFields} from './form.js';
 
-const ADS_COUNT = 20;
-const dataArr = [];
-const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
+const ADS_COUNT = 100;
+const ADS_LIMIT = 10;
+const fullData = [];
+const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
+const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
 const housingType = mapFilters.querySelector('#housing-type');
 const housingPrice = mapFilters.querySelector('#housing-price');
 const housingRooms = mapFilters.querySelector('#housing-rooms');
@@ -19,12 +22,12 @@ const START_COORDS = {
 };
 
 for (let i = 0; i < ADS_COUNT; i++) {
-  dataArr.push(generateAdData(i + 1));
+  fullData.push(generateAdData(i + 1));
 }
 
 const map = L.map('map-canvas')
   .on('load', () => {
-    activateForms();
+    activateForms([adForm, mapFilters]);
   })
   .setView(START_COORDS, 10);
 
@@ -59,9 +62,13 @@ const createPin = (data) => {
     .bindPopup(createAd(data, offerTemplate));
 };
 
-dataArr.forEach((data) => {
-  createPin(data);
-});
+const renderPins = (dataArray) => {
+  for (let i = 0; i <= ADS_LIMIT; i++) {
+    createPin(dataArray[i]);
+  }
+};
+
+renderPins(fullData);
 
 const mainPinIcon = L.icon({
   iconUrl: '/img/main-pin.svg',
@@ -80,7 +87,7 @@ const mainPin = L.marker(
 mainPin.addTo(map);
 
 const adFormCoords = document.querySelector('#address');
-adFormCoords.value = `${START_COORDS.lat} ${START_COORDS.lng}`;
+adFormCoords.defaultValue = `${START_COORDS.lat} ${START_COORDS.lng}`;
 
 mainPin.on('moveend', (evt) => {
   const coords = evt.target.getLatLng();
@@ -91,7 +98,7 @@ mainPin.on('moveend', (evt) => {
 mapFilters.addEventListener('change', () => {
   pinGroup.clearLayers();
 
-  let filteredData = dataArr.slice();
+  let filteredData = fullData.slice();
 
   if (housingType.value !== 'any') {
     filteredData = filteredData.filter((data) => data.offer.type === housingType.value);
@@ -130,7 +137,26 @@ mapFilters.addEventListener('change', () => {
     filteredData = filteredData.filter((data) => checkedCheckboxValues.every((current) => data.offer.features.includes(current)));
   }
 
-  filteredData.forEach((data) => {
-    createPin(data);
-  });
+  renderPins(filteredData);
 });
+
+const setFormStatus = () => {
+  mainPin.setLatLng(START_COORDS);
+  map.setView(START_COORDS);
+  map.closePopup();
+
+  mapFilters.reset();
+  renderPins();
+
+  resetFormFields();
+};
+
+adForm.addEventListener('reset', () => {
+  setFormStatus();
+});
+
+adForm.addEventListener('submit', () => {
+  setFormStatus();
+  adFormCoords.removeAttribute('disabled');
+});
+
