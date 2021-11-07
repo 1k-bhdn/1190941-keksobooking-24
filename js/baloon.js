@@ -1,5 +1,8 @@
 export const createAd = (data, template) => {
   const offer = template.cloneNode(true);
+
+  // todo скрыть то что не приходит с сервера
+
   offer.querySelector('.popup__avatar').src = data.author.avatar ? data.author.avatar : 'img/avatars/default.png';
   offer.querySelector('.popup__title').textContent = data.offer.title ? data.offer.title : 'Сюда бы заголовок';
   offer.querySelector('.popup__text--address').textContent = data.offer.address ? data.offer.address : 'Безвозвратно утерян';
