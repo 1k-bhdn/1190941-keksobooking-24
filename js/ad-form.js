@@ -45,8 +45,15 @@ const setFormStatusOnSendSuccess = (resetFilterForm, resetMap, fullData) => () =
   document.addEventListener('keydown', onMessageEscKeydown);
 };
 
-const setFormStatusOnSendError = (message) => {
+const setFormStatusOnSendError = (message, errorFields = null) => {
   renderMessage(errorTemplate, message);
+  adFormCoords.setAttribute('disabled', '');
+
+  if (errorFields) {
+    errorFields.forEach((current) => {
+      document.querySelector(`input[name=${current}]`).style.border = '2px solid red';
+    });
+  }
 
   document.addEventListener('click', onSuccessMessageShown);
   document.addEventListener('keydown', onMessageEscKeydown);
@@ -62,7 +69,7 @@ const setAdFormReset = (resetFilterForm, resetMap, fullData) => {
   });
 };
 
-const setAdFormSubmit = (resetMap, resetFilterForm, sendData, fullData) => {
+const setAdFormSubmit = (resetFilterForm, resetMap, sendData, fullData) => {
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 

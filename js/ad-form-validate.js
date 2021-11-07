@@ -16,12 +16,19 @@ const adFormType = adForm.querySelector('#type');
 const adFormTimeIn = adForm.querySelector('#timein');
 const adFormTimeOut = adForm.querySelector('#timeout');
 
+const removeErrorStyles = (element) => {
+  if (element.style.border) {
+    element.style.border = '';
+  }
+};
+
 adFormTitle.addEventListener('input', () => {
   const titleLength = adFormTitle.value.length;
 
   if (titleLength < adFormTitleMinLength) {
     adFormTitle.setCustomValidity(`Ещё ${adFormTitleMinLength - titleLength} симв.`);
   } else {
+    removeErrorStyles(adFormTitle);
     adFormTitle.setCustomValidity('');
   }
 
@@ -41,6 +48,7 @@ adFormPrice.addEventListener('blur', () => {
   } else if (roomType === 'palace' && roomCost < PALACE_MIN_COST) {
     adFormPrice.setCustomValidity(`Минимальная цена для размещения в дворце на 1-ну ночь ${PALACE_MIN_COST} руб.`);
   } else {
+    removeErrorStyles(adFormPrice);
     adFormPrice.setCustomValidity('');
   }
 
@@ -60,6 +68,7 @@ const checkRoomsToCapacity = (field) => {
   } else if (roomsCount === '100' && roomCapacity !== '0') {
     field.setCustomValidity('100 комнат не для гостей.');
   } else {
+    removeErrorStyles(field);
     field.setCustomValidity('');
   }
 

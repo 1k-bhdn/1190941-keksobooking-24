@@ -1,5 +1,5 @@
 import {activateForm} from './util.js';
-import {renderPins, START_COORDS, setCurrentAddress, resetMap} from './map.js';
+import {renderPins, START_COORDS, setCurrentAddress, resetMap, isMapLoaded} from './map.js';
 import {setFilterFormChange, resetFilterForm, mapFilters} from './filter.js';
 import {
   setAdFormReset,
@@ -9,15 +9,18 @@ import {
 } from './ad-form.js';
 import {getData, sendData} from './api.js';
 
-getData((data) => {
-  renderPins(data);
+// todo решение с флагом isMapLoaded похоже на костыль, нужно уточнить
+if (isMapLoaded) {
+  getData((data) => {
+    renderPins(data);
 
-  activateForm(mapFilters);
-  setFilterFormChange(renderPins, data);
+    activateForm(mapFilters);
+    setFilterFormChange(renderPins, data);
 
-  setAdFormReset(resetFilterForm, resetMap, data);
-  setAdFormSubmit(resetFilterForm, resetMap, sendData, data);
+    setAdFormReset(resetFilterForm, resetMap, data);
+    setAdFormSubmit(resetFilterForm, resetMap, sendData, data);
 
-  setStartCoordsToAddressField(START_COORDS);
-  setCurrentAddress(setCoordsToAddressField);
-});
+    setStartCoordsToAddressField(START_COORDS);
+    setCurrentAddress(setCoordsToAddressField);
+  });
+}

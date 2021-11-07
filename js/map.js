@@ -10,11 +10,13 @@ const START_COORDS = {
   lng: 139.69171,
 };
 
-// todo тут беда с онлоадом, нужно придумать как вынести его в мэйн
+let isMapLoaded = false;
 
+// todo тут беда с онлоадом, нужно придумать как вынести его в мэйн https://up.htmlacademy.ru/profession/backender/1/javascript/project/keksobooking#keksobooking-5-10
 const map = L.map('map-canvas')
   .on('load', () => {
     activateForm(adForm);
+    isMapLoaded = true;
   })
   .setView(START_COORDS, 10);
 
@@ -89,5 +91,4 @@ const resetMap = (fullData) => {
   renderPins(fullData);
 };
 
-// todo перебрать экспорты/импорты везде
-export {renderPins, map, pinGroup, mainPin, START_COORDS, setCurrentAddress, resetMap};
+export {renderPins, START_COORDS, setCurrentAddress, resetMap, isMapLoaded};

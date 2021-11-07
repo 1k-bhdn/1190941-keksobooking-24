@@ -42,11 +42,23 @@ const sendData = (onSuccess, onFail, body) => {
       if (response.ok) {
         onSuccess();
       } else {
-        throw new Error('Не удалось отправить форму. Попробуйте ещё раз');
+        return response.json();
       }
     })
-    .catch((err) => {
-      onFail(err);
+    .then((data) => {
+      if (data) {
+        const errorFields = [];
+
+        data.forEach((current) => {
+          errorFields.push(current.fieldName);
+        });
+
+        // todo была ситуация когда видел сразу 2 сообщения об ошибке, нужно попробовать воссоздать и фиксить
+        onFail('Не удалось отправить форму. Попробуйте ещё раз', errorFields);
+      }
+    })
+    .catch(() => {
+      onFail('Не удалось отправить форму. Попробуйте ещё раз');
     });
 };
 
