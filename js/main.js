@@ -8,14 +8,16 @@ import {
   setCoordsToAddressField
 } from './ad-form.js';
 import {getData, sendData} from './api.js';
+import {debounce} from './utils/debounce.js';
 
 // todo решение с флагом isMapLoaded похоже на костыль, нужно уточнить
+
 if (isMapLoaded) {
   getData((data) => {
     renderPins(data);
 
     activateForm(mapFilters);
-    setFilterFormChange(renderPins, data);
+    setFilterFormChange(debounce(renderPins), data);
 
     setAdFormReset(resetFilterForm, resetMap, data);
     setAdFormSubmit(resetFilterForm, resetMap, sendData, data);
