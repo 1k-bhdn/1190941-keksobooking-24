@@ -1,28 +1,35 @@
 import {activateForm} from './util.js';
-import {renderPins, START_COORDS, setCurrentAddress, resetMap, isMapLoaded} from './map.js';
+import {START_COORDS, mapInit, renderPins, resetMap, setCurrentAddress, setMainPin} from './map.js';
 import {setFilterFormChange, resetFilterForm, mapFilters} from './filter.js';
 import {
   setAdFormReset,
   setAdFormSubmit,
   setStartCoordsToAddressField,
-  setCoordsToAddressField
+  setCoordsToAddressField,
+  adForm
 } from './ad-form.js';
 import {getData, sendData} from './api.js';
 import {debounce} from './utils/debounce.js';
 
-// todo решение с флагом isMapLoaded похоже на костыль, нужно уточнить
+const getPinGroup = (LMap) => L.layerGroup().addTo(LMap);
 
-if (isMapLoaded) {
+const map = L.map('map-canvas').on('load', () => {
+  activateForm(adForm);
   getData((data) => {
-    renderPins(data);
+    const pinGroup = getPinGroup(map);
+    const mainPin = setMainPin();
+    mainPin.addTo(map);
+
+    mapInit(map, data, pinGroup);
 
     activateForm(mapFilters);
-    setFilterFormChange(debounce(renderPins), data);
+    setFilterFormChange(debounce(renderPins), data, pinGroup);
 
-    setAdFormReset(resetFilterForm, resetMap, data);
-    setAdFormSubmit(resetFilterForm, resetMap, sendData, data);
+    setAdFormReset(resetFilterForm, resetMap, data, mainPin, map, pinGroup);
+    setAdFormSubmit(resetFilterForm, resetMap, sendData, data, mainPin, map, pinGroup);
 
     setStartCoordsToAddressField(START_COORDS);
-    setCurrentAddress(setCoordsToAddressField);
+    setCurrentAddress(setCoordsToAddressField, mainPin);
   });
-}
+})
+  .setView(START_COORDS, 10);

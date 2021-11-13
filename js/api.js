@@ -53,7 +53,6 @@ const sendData = (onSuccess, onFail, body) => {
           errorFields.push(current.fieldName);
         });
 
-        // todo была ситуация когда видел сразу 2 сообщения об ошибке, нужно попробовать воссоздать и фиксить
         onFail('Не удалось отправить форму. Попробуйте ещё раз', errorFields);
       }
     })

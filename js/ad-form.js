@@ -34,12 +34,12 @@ const removeMessage = () => {
   document.removeEventListener('keydown', onMessageEscKeydown);
 };
 
-const setFormStatusOnSendSuccess = (resetFilterForm, resetMap, fullData) => () => {
+const setFormStatusOnSendSuccess = (resetFilterForm, resetMap, fullData, mainPin, map, pinGroup) => () => {
   renderMessage(successTemplate, 'Ваше объявление успешно размещено');
 
   resetAdFrom();
   resetFilterForm();
-  resetMap(fullData);
+  resetMap(fullData, mainPin, map, pinGroup);
 
   document.addEventListener('click', onSuccessMessageShown);
   document.addEventListener('keydown', onMessageEscKeydown);
@@ -51,7 +51,7 @@ const setFormStatusOnSendError = (message, errorFields = null) => {
 
   if (errorFields) {
     errorFields.forEach((current) => {
-      document.querySelector(`input[name=${current}]`).style.border = '2px solid red';
+      document.querySelector(`[name=${current}]`).style.border = '2px solid red';
     });
   }
 
@@ -61,21 +61,21 @@ const setFormStatusOnSendError = (message, errorFields = null) => {
 
 disableForm(adForm);
 
-const setAdFormReset = (resetFilterForm, resetMap, fullData) => {
+const setAdFormReset = (resetFilterForm, resetMap, fullData, mainPin, map, pinGroup) => {
   adForm.addEventListener('reset', () => {
     resetAdFrom();
     resetFilterForm();
-    resetMap(fullData);
+    resetMap(fullData, mainPin, map, pinGroup);
   });
 };
 
-const setAdFormSubmit = (resetFilterForm, resetMap, sendData, fullData) => {
+const setAdFormSubmit = (resetFilterForm, resetMap, sendData, fullData, mainPin, map, pinGroup) => {
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
     adFormCoords.removeAttribute('disabled');
     sendData(
-      setFormStatusOnSendSuccess(resetFilterForm, resetMap, fullData),
+      setFormStatusOnSendSuccess(resetFilterForm, resetMap, fullData, mainPin, map, pinGroup),
       setFormStatusOnSendError,
       new FormData(evt.target),
     );
