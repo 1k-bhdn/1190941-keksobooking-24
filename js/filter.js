@@ -10,7 +10,7 @@ const filterCheckboxes = housingFeatures.querySelectorAll('input[type=checkbox]'
 
 disableForm(mapFilters);
 
-const setFilterFormChange = (renderPins, fullData) => {
+const setFilterFormChange = (renderPins, fullData, pinGroup) => {
   mapFilters.addEventListener('change', () => {
     let filteredData = fullData.slice();
 
@@ -54,7 +54,7 @@ const setFilterFormChange = (renderPins, fullData) => {
       });
     }
 
-    renderPins(filteredData);
+    renderPins(filteredData, pinGroup);
   });
 };
 

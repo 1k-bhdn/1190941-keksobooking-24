@@ -1,5 +1,3 @@
-import {activateForm} from './util.js';
-import {adForm} from './ad-form.js';
 import {createAd} from './baloon.js';
 
 const ADS_LIMIT = 10;
@@ -10,26 +8,7 @@ const START_COORDS = {
   lng: 139.69171,
 };
 
-let isMapLoaded = false;
-
-// todo тут беда с онлоадом, нужно придумать как вынести его в мэйн https://up.htmlacademy.ru/profession/backender/1/javascript/project/keksobooking#keksobooking-5-10
-const map = L.map('map-canvas')
-  .on('load', () => {
-    activateForm(adForm);
-    isMapLoaded = true;
-  })
-  .setView(START_COORDS, 10);
-
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  },
-).addTo(map);
-
-const pinGroup = L.layerGroup().addTo(map);
-
-const createPin = (data) => {
+const createPin = (data, pinGroup) => {
   const pinIcon = L.icon({
     iconUrl: '/img/pin.svg',
     iconSize: [40, 40],
@@ -51,13 +30,32 @@ const createPin = (data) => {
     .bindPopup(createAd(data, offerTemplate));
 };
 
+const renderPins = (dataArray, pinGroup) => {
+  pinGroup.clearLayers();
+
+  for (let i = 0; i < dataArray.length && i < ADS_LIMIT; i++) {
+    createPin(dataArray[i], pinGroup);
+  }
+};
+
+const mapInit = (map, data, pinGroup) => {
+  L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    },
+  ).addTo(map);
+
+  renderPins(data, pinGroup);
+};
+
 const mainPinIcon = L.icon({
   iconUrl: '/img/main-pin.svg',
   iconSize: [52, 52],
   iconAnchor: [26, 52],
 });
 
-const mainPin = L.marker(
+const setMainPin = () => L.marker(
   START_COORDS,
   {
     draggable: true,
@@ -65,9 +63,7 @@ const mainPin = L.marker(
   },
 );
 
-mainPin.addTo(map);
-
-const setCurrentAddress = (setCoordsToAddress) => {
+const setCurrentAddress = (setCoordsToAddress, mainPin) => {
   mainPin.on('moveend', (evt) => {
     const coords = evt.target.getLatLng();
 
@@ -75,20 +71,12 @@ const setCurrentAddress = (setCoordsToAddress) => {
   });
 };
 
-const renderPins = (dataArray) => {
-  pinGroup.clearLayers();
-
-  for (let i = 0; i < dataArray.length && i < ADS_LIMIT; i++) {
-    createPin(dataArray[i]);
-  }
-};
-
-const resetMap = (fullData) => {
+const resetMap = (fullData, mainPin, map, pinGroup) => {
   mainPin.setLatLng(START_COORDS);
   map.setView(START_COORDS);
   map.closePopup();
 
-  renderPins(fullData);
+  renderPins(fullData, pinGroup);
 };
 
-export {renderPins, START_COORDS, setCurrentAddress, resetMap, isMapLoaded};
+export {START_COORDS, mapInit, createPin, setCurrentAddress, renderPins, resetMap, setMainPin};
