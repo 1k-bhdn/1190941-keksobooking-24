@@ -1,18 +1,23 @@
 import {createAd} from './baloon.js';
 
 const ADS_LIMIT = 10;
-const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
+const PIN_ICON_SIZE = 40;
+const PIN_ANCHOR_COORDS = 20;
+const MAIN_PIN_ICON_SIZE = 52;
+const MAIN_PIN_ANCHOR_COORDS = 26;
 
 const START_COORDS = {
   lat: 35.68950,
   lng: 139.69171,
 };
 
+const offerTemplate = document.querySelector('#card').content.querySelector('.popup');
+
 const createPin = (data, pinGroup) => {
   const pinIcon = L.icon({
     iconUrl: '/img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+    iconSize: [PIN_ICON_SIZE, PIN_ICON_SIZE],
+    iconAnchor: [PIN_ANCHOR_COORDS, PIN_ICON_SIZE],
   });
 
   const marker = L.marker(
@@ -31,6 +36,10 @@ const createPin = (data, pinGroup) => {
 };
 
 const renderPins = (dataArray, pinGroup) => {
+  if (!dataArray) {
+    return;
+  }
+
   pinGroup.clearLayers();
 
   for (let i = 0; i < dataArray.length && i < ADS_LIMIT; i++) {
@@ -38,21 +47,19 @@ const renderPins = (dataArray, pinGroup) => {
   }
 };
 
-const mapInit = (map, data, pinGroup) => {
+const mapInit = (map) => {
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
   ).addTo(map);
-
-  renderPins(data, pinGroup);
 };
 
 const mainPinIcon = L.icon({
   iconUrl: '/img/main-pin.svg',
-  iconSize: [52, 52],
-  iconAnchor: [26, 52],
+  iconSize: [MAIN_PIN_ICON_SIZE, MAIN_PIN_ICON_SIZE],
+  iconAnchor: [MAIN_PIN_ANCHOR_COORDS, MAIN_PIN_ICON_SIZE],
 });
 
 const setMainPin = () => L.marker(
@@ -71,7 +78,7 @@ const setCurrentAddress = (setCoordsToAddress, mainPin) => {
   });
 };
 
-const resetMap = (fullData, mainPin, map, pinGroup) => {
+const resetMap = (mainPin, map, pinGroup, fullData) => {
   mainPin.setLatLng(START_COORDS);
   map.setView(START_COORDS);
   map.closePopup();

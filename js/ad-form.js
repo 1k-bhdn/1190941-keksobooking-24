@@ -65,6 +65,14 @@ imagesChooser.addEventListener('change', () => {
 const resetAdFrom = () => {
   adForm.reset();
   adFormPrice.setAttribute('placeholder', '0');
+
+  avatarPreview.src = 'img/muffin-grey.svg';
+
+  if (imagesContainer.querySelectorAll('.ad-form__photo').length > 1) {
+    imagesContainer.querySelectorAll('.ad-form__photo').forEach((element, i) => {
+      i === 0 ? element.querySelector('img').remove() : element.remove();
+    });
+  }
 };
 
 const renderMessage = (tpl, message) => {
@@ -93,10 +101,11 @@ const removeMessage = () => {
 
 const setFormStatusOnSendSuccess = (resetFilterForm, resetMap, fullData, mainPin, map, pinGroup) => () => {
   renderMessage(successTemplate, 'Ваше объявление успешно размещено');
+  adFormCoords.setAttribute('disabled', '');
 
   resetAdFrom();
   resetFilterForm();
-  resetMap(fullData, mainPin, map, pinGroup);
+  resetMap(mainPin, map, pinGroup, fullData);
 
   document.addEventListener('click', onSuccessMessageShown);
   document.addEventListener('keydown', onMessageEscKeydown);
@@ -118,15 +127,15 @@ const setFormStatusOnSendError = (message, errorFields = null) => {
 
 disableForm(adForm);
 
-const setAdFormReset = (resetFilterForm, resetMap, fullData, mainPin, map, pinGroup) => {
+const setAdFormReset = (resetFilterForm, resetMap, mainPin, map, pinGroup, fullData = null) => {
   adForm.addEventListener('reset', () => {
     resetAdFrom();
     resetFilterForm();
-    resetMap(fullData, mainPin, map, pinGroup);
+    resetMap(mainPin, map, pinGroup, fullData);
   });
 };
 
-const setAdFormSubmit = (resetFilterForm, resetMap, sendData, fullData, mainPin, map, pinGroup) => {
+const setAdFormSubmit = (resetFilterForm, resetMap, sendData, mainPin, map, pinGroup, fullData = null) => {
   adForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
 

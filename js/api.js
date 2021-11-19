@@ -21,12 +21,13 @@ const setMessageOnDataLoadError = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-const getData = (onSuccess) => {
+const getData = (onSuccess, onError) => {
   fetch('https://24.javascript.pages.academy/keksobooking/data')
     .then((response) => response.json())
     .then((ads) => onSuccess(ads))
     .catch(() => {
       setMessageOnDataLoadError('Не удалось загрузить объявления');
+      onError();
     });
 };
 
